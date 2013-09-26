@@ -44,8 +44,8 @@
 		this.isInline = false;
 		this.isVisible = false;
 		this.isInput = this.element.is('input');
-		this.component = this.element.is('.date') ? this.element.find('.add-on .icon-th, .add-on .icon-time, .add-on .icon-calendar').parent() : false;
-		this.componentReset = this.element.is('.date') ? this.element.find('.add-on .icon-remove').parent() : false;
+		this.component = this.element.is('.date') ? this.element.find('.input-group-addon .icon-th, .input-group-addon .icon-time, .input-group-addon .icon-calendar').parent() : false;
+		this.componentReset = this.element.is('.date') ? this.element.find('.input-group-addon .icon-remove').parent() : false;
 		this.hasInput = this.component && this.element.find('input').length;
 		if (this.component && this.component.length === 0) {
 			this.component = false;
@@ -403,10 +403,14 @@
 		},
 
 		place: function(){
-			if(this.isInline) return;
-			var zIndex = parseInt(this.element.parents().filter(function() {
-				return $(this).css('z-index') != 'auto';
-			}).first().css('z-index'))+10;
+		    if (this.isInline) return;
+		    var zIndex = 0;
+            this.element.parents().each(function() {
+                var current = parseInt($(this).css('z-index'), 10);
+
+                if (!isNaN(current) && current > zIndex)
+                    zIndex = current + 10;
+            });
 			var offset, top, left;
 			if (this.component) {
 				offset = this.component.offset();
